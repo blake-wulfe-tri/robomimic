@@ -69,14 +69,14 @@ def make_generator_helper(args):
             value_names=[
                 "data_format",
             ]
-        )    
+        )
         if args.data_format == 'hdf5':
             generator.add_param(
                 key="train.data",
                 name="ds",
                 group=2,
                 values=[
-                    [{"path": p} for p in scan_datasets("~/Downloads/example_pen_in_cup", postfix="trajectory_im128.h5")],
+                    [{"path": p} for p in scan_datasets("/ssd1/datasets/robotics/r2d2/tasks/pen/hdf5", postfix="trajectory_im128.h5")],
                 ],
                 value_names=[
                     "pen-in-cup",
