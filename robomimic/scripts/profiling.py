@@ -1,10 +1,38 @@
+from contextlib import contextmanager
 import cProfile
-import pstats
 import time
 
+import tensorflow as tf
 import tqdm
 
-import tensorflow as tf
+
+@contextmanager
+def cprofiler_context(output_file, do_profile=True):
+    if do_profile:
+        pr = cProfile.Profile()
+        pr.enable()
+    yield
+    if do_profile:
+        pr.disable()
+        pr.dump_stats(output_file)
+
+
+@contextmanager
+def tfprofiler_context(output_file, do_profile=True):
+    if do_profile:
+        tf.profiler.experimental.start(output_file)
+    yield
+    if do_profile:
+        tf.profiler.experimental.stop()
+
+
+def get_profiler_context_manager(profiler):
+    if profiler == "cprofile":
+        return cprofiler_context
+    elif profiler == "tfprofile":
+        return tfprofiler_context
+    else:
+        raise ValueError()
 
 
 def time_dataloader(
@@ -13,54 +41,18 @@ def time_dataloader(
     max_iters=50,
     verbose=True,
     profile=False,
+    profiler="cprofile",
 ):
-    start = time.time()
-
     if verbose:
         loader = tqdm.tqdm(loader, desc="Data Loader:")
-
-    if profile:
-        pr = cProfile.Profile()
-        pr.enable()
-    for i, batch in enumerate(loader):
-        # breakpoint()
-        if i == max_iters - 1:
-            break
-
+    profiler_context_manager = get_profiler_context_manager(profiler)
+    start = time.time()
+    with profiler_context_manager(prof_filepath, do_profile=profile):
+        for i, batch in enumerate(loader):
+            if i == max_iters - 1:
+                break
     end = time.time()
-
-    if profile:
-        pr.disable()
-        pr.dump_stats(prof_filepath)
-
     duration = end - start
     if verbose:
         print(f"{i+1} batches took {duration:0.4f} seconds")
     return duration
-
-
-# import tensorflow as tf
-# import time
-# import tqdm
-
-
-# @tf.function
-# def tf_time_dataloader(loader, max_iters):
-#     for i, batch in enumerate(loader.take(max_iters)):
-#         # just a pass for now; you can perform operations here if required
-#         tf.print(i)
-#         breakpoint()
-
-
-# def time_tf_dataloader(
-#     loader,
-#     max_iters=50,
-#     verbose=True,
-# ):
-#     start = time.time()
-#     tf_time_dataloader(loader, max_iters)
-#     end = time.time()
-#     duration = end - start
-#     if verbose:
-#         print(f"{max_iters} batches took {duration:0.4f} seconds")
-#     return duration

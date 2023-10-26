@@ -71,14 +71,19 @@ def train(config, device):
 
     # Load the datasets
     train_builder, train_loader, normalization_metadata = make_dataset(
-        config, train=True, shuffle=False
+        config, train=True, shuffle=True
     )
     ds_format = config.train.data_format
     assert ds_format == "rlds"
 
-    filepath = "rlds.pstats"
-    time_dataloader(train_loader, filepath, max_iters=20)
-
+    filepath = "rlds_prof"
+    time_dataloader(
+        train_loader,
+        filepath,
+        max_iters=10,
+        profile=False,
+        profiler="tfprofile",
+    )
 
 def main(args):
 
