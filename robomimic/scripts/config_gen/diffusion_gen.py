@@ -76,7 +76,7 @@ def make_generator_helper(args):
                 name="ds",
                 group=2,
                 values=[
-                    [{"path": p} for p in scan_datasets("/ssd1/datasets/robotics/r2d2/tasks/pen/hdf5", postfix="trajectory_im128.h5")],
+                    [{"path": p} for p in scan_datasets("/ssd1/datasets/robotics/r2d2/tasks/pen/hdf5", postfix="trajectory_im256.h5")],
                 ],
                 value_names=[
                     "pen-in-cup",
@@ -147,7 +147,7 @@ def make_generator_helper(args):
                 group=2,
                 values=[
                     [
-                        {"path": "/iris/u/jyang27/rlds_data",
+                        {"path": "/ssd1/datasets/robotics/r2d2/tasks/pen/from_gcloud/",
                        "name": "r2_d2"}, # replace with your own path
                     ],
                 ],
@@ -302,7 +302,7 @@ def make_generator_helper(args):
                 group=2,
                 values=[
                     [
-                        {"path": "/iris/u/jyang27/rlds_data",
+                        {"path": "",
                         "name": "robomimic_dataset"}, # replace with your own path
                     ],
                 ],
@@ -349,7 +349,7 @@ def make_generator_helper(args):
         name="",
         group=-1,
         values=[
-            "/iris/u/jyang27/expdata/{env}/{mod}/{algo_name_short}".format(
+            "/ssd1/experiments/robotics/r2d2/robomimic/{env}/{mod}/{algo_name_short}".format(
                 env=args.env,
                 mod=args.mod,
                 algo_name_short=algo_name_short,
