@@ -80,7 +80,7 @@ def train(config, device):
     time_dataloader(
         train_loader,
         filepath,
-        max_iters=10,
+        max_iters=20,
         profile=False,
         profiler="tfprofile",
     )
