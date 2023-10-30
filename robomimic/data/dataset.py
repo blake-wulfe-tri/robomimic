@@ -242,7 +242,8 @@ def make_dataset(
     if normalization_metadata is None:
         normalization_metadata = get_obs_action_metadata(
             builder,
-            dataset,
+            #When computing dataset statistics, we need the decoded dataset.
+            decode_dataset(dataset),
             keys=metadata_keys,
             load_if_exists=True#False
         )
